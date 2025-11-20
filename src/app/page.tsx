@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
 
-  const [todos, setTodos] = useState<string[]>([]);
+  const [todos, setTodos] = useState<{ text: string, completed: boolean }[]>([]);
   const [todo, setTodo] = useState<string>("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editText, setEditText] = useState("");
@@ -20,7 +20,7 @@ export default function Home() {
   }, [todos])
 
   const add = () => {
-    setTodos([todo, ...todos]);
+    setTodos([{ text: todo, completed: false }, ...todos]);
     setTodo("");
   }
 
@@ -38,7 +38,7 @@ export default function Home() {
 
   const editToDo = (index: number) => {
     setEditIndex(index);
-    setEditText(todos[index]);
+    setEditText(todos[index].text);
   }
 
   const saveToDo = () => {
@@ -46,7 +46,7 @@ export default function Home() {
     if (!editText.trim()) return;
 
     const updated = [...todos];
-    updated[editIndex] = editText;
+    updated[editIndex].text = editText;
     setTodos(updated);
 
     setEditIndex(null);
@@ -72,6 +72,12 @@ export default function Home() {
 
   const clearAll = () => {
     setTodos([]);
+  }
+
+  const toggleBtn = (index: number) => {
+    const updated = [...todos]
+    updated[index].completed = !updated[index].completed;
+    setTodos(updated);
   }
 
   return (
@@ -152,8 +158,21 @@ export default function Home() {
                       </div>
                     ) : (
                       <>
-                      <li className="flex-1 text-gray-800 font-medium text-lg px-2 break-words">
-                        {value}
+                      <input
+                          type="checkbox"
+                          checked={value.completed}
+                          onChange={() => toggleBtn(index)}
+                          disabled={editIndex !== null}
+                          className="w-6 h-6 accent-blue-600 cursor-pointer"
+                        />
+
+                      <li className={`flex-1 text-lg px-2 break-words ${
+                            value.completed
+                              ? "line-through opacity-60"
+                              : ""
+                          }`}
+                        >
+                        {value.text}
                       </li>
                       <button 
                         onClick={() => deleteToDo(index)}
