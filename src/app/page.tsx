@@ -70,6 +70,10 @@ export default function Home() {
     }
   }
 
+  const clearAll = () => {
+    setTodos([]);
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
@@ -97,6 +101,14 @@ export default function Home() {
               className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg cursor-pointer hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Add
+            </button>
+
+            <button
+              onClick={clearAll}
+              disabled={editIndex !== null || todos.length === 0}
+              className="px-6 py-3 bg-red-600 text-white font-semibold cursor-pointer rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              Delete All
             </button>
           </div>
         </div>
