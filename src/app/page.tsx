@@ -47,6 +47,18 @@ export default function Home() {
     setEditText("");
   }
 
+  const handleEditKey = (e) => {
+    if(e.key === 'Enter')
+    {
+      saveToDo();
+    }
+
+    if(e.key === 'Escape')
+    {
+      cancelEdit();
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
@@ -70,8 +82,8 @@ export default function Home() {
             
             <button
               onClick={() => add()}
+              disabled={!todo.trim() || editIndex !== null}
               className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg cursor-pointer hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={!todo.trim()}
             >
               Add
             </button>
@@ -95,6 +107,7 @@ export default function Home() {
                         <input 
                           type='text'
                           value={editText}
+                          onKeyDown={handleEditKey}
                           onChange={(e) => setEditText(e.target.value)}
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                         />
@@ -121,6 +134,7 @@ export default function Home() {
                       </li>
                       <button 
                         onClick={() => deleteToDo(index)}
+                        disabled={editIndex !== null}
                         className="ml-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg cursor-pointer hover:bg-red-600 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                       >
                         Delete
@@ -128,6 +142,7 @@ export default function Home() {
   
                       <button
                         onClick={() => editToDo(index)}
+                        disabled={editIndex !== null}
                         className="ml-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg cursor-pointer hover:bg-blue-600 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                       >
                         Edit
