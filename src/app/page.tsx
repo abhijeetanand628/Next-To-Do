@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
 
@@ -7,6 +7,17 @@ export default function Home() {
   const [todo, setTodo] = useState<string>("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editText, setEditText] = useState("");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("todos");
+    if (saved) {
+      setTodos(JSON.parse(saved));
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos])
 
   const add = () => {
     setTodos([todo, ...todos]);
