@@ -80,6 +80,8 @@ export default function Home() {
     setTodos(updated);
   }
 
+  const tasksLeft = todos.filter(todo => !todo.completed).length;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
@@ -124,6 +126,11 @@ export default function Home() {
             <h2 className="text-xl font-semibold text-gray-700 mb-4 px-2">
               Your Tasks ({todos.length})
             </h2>
+
+            <p className="text-gray-600 font-medium px-2">
+              Tasks Left: {tasksLeft}
+            </p>
+
             <ul className="space-y-3">
               {
                 todos.map((value, index) => (
