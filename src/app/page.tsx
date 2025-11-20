@@ -5,6 +5,8 @@ export default function Home() {
 
   const [todos, setTodos] = useState<string[]>([]);
   const [todo, setTodo] = useState<string>("");
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
 
   const add = () => {
     setTodos([todo, ...todos]);
@@ -21,6 +23,28 @@ export default function Home() {
   const deleteToDo = (index: number) => {
     setTodos(todos.filter((_, i) => i !== index))
     // "_" this is used to skip the first parameter and move to next, as in we don't care what's written in the todo but we want to check its index.
+  }
+
+  const editToDo = (index: number) => {
+    setEditIndex(index);
+    setEditText(todos[index]);
+  }
+
+  const saveToDo = () => {
+    if(editIndex === null) return;
+    if (!editText.trim()) return;
+
+    const updated = [...todos];
+    updated[editIndex] = editText;
+    setTodos(updated);
+
+    setEditIndex(null);
+    setEditText("");
+  }
+
+  const cancelEdit = () => {
+    setEditIndex(null);
+    setEditText("");
   }
 
   return (
@@ -46,7 +70,7 @@ export default function Home() {
             
             <button
               onClick={() => add()}
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg cursor-pointer hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={!todo.trim()}
             >
               Add
@@ -66,23 +90,53 @@ export default function Home() {
                     key={index}
                     className="bg-white rounded-xl shadow-md border border-gray-100 p-4 flex items-center justify-between group hover:shadow-lg transition-all duration-200 hover:border-blue-200"
                   >
-                    <li className="flex-1 text-gray-800 font-medium text-lg px-2 break-words">
-                      {value}
-                    </li>
-                    <button 
-                      onClick={() => deleteToDo(index)}
-                      className="ml-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg cursor-pointer hover:bg-red-600 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                    >
-                      Delete
-                    </button>
+                    {editIndex === index ? (
+                      <div className="flex-1 flex items-center gap-3">
+                        <input 
+                          type='text'
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
 
-                    <button
-                      // onClick={() => editToDo(index)}
-                      className="ml-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg cursor-pointer hover:bg-blue-600 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                    >
-                      Edit
+                        <button
+                          onClick={saveToDo}
+                          disabled={!editText.trim()}
+                          className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg cursor-pointer hover:bg-green-600 transform hover:scale-105 transition-all"
+                        >
+                          Save
+                        </button>
+
+                        <button
+                          onClick={cancelEdit}
+                          className="px-4 py-2 bg-gray-400 text-white font-semibold rounded-lg cursor-pointer hover:bg-gray-500 transform hover:scale-105 transition-all"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                      <li className="flex-1 text-gray-800 font-medium text-lg px-2 break-words">
+                        {value}
+                      </li>
+                      <button 
+                        onClick={() => deleteToDo(index)}
+                        className="ml-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg cursor-pointer hover:bg-red-600 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                      >
+                        Delete
                       </button>
+  
+                      <button
+                        onClick={() => editToDo(index)}
+                        className="ml-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg cursor-pointer hover:bg-blue-600 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                      >
+                        Edit
+                        </button>
+                        </>
+                    )}
+
                   </div>
+
                 ))
               }
             </ul>
